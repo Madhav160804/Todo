@@ -45,18 +45,29 @@ app.put('/completed',async (req,res) => {
         return;
     }
     // update it in mongodb
-    await todo.update({
-        _id: req.body.id
-    }, {
-        completed: true
-    })
-    res.json({
-        msg: "Todo marked as completed"
-    })
+
+    try{
+        await todo.findByIdAndUpdate({
+            _id: req.body.id
+        }, {
+            completed: true
+        })
+        res.json({
+            msg: "Todo marked as completed"
+        })
+    }
+    catch(err){
+        console.log(err);
+        res.json({
+            msg: "Could not update the todo"
+        })
+    }
 
 })
 
 
-app.listen(port);
+app.listen(port,() => {
+    console.log(`App listening at port ${port}`)
+});
 
 
